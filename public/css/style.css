@@ -1,0 +1,43 @@
+body {
+    background: #333333;
+    color: #FFFAF4;
+    font-family: 'Open Sans',sans-serif;
+    font-weight: 400;
+}
+
+/* Loading CSS inspired by http://codepen.io/Manoz/pen/pydxK */
+
+.load-wrapp {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: -50px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+.load-wrapp .line {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    margin-top: 14px;
+    border-radius: 14px;
+    background-color: #4b9cdb;
+}
+
+.load-wrapp .load-init .line:nth-last-child(1) {animation: loadingInit 1.5s .2s infinite;}
+.load-wrapp .load-init .line:nth-last-child(2) {animation: loadingInit 1.5s .6s infinite;}
+.load-wrapp .load-init .line:nth-last-child(3) {animation: loadingInit 1.5s 0s infinite;}
+.load-wrapp .load-init .line:nth-last-child(4) {animation: loadingInit 1.5s .3s infinite;}
+.load-wrapp .load-init .line:nth-last-child(5) {animation: loadingInit 1.5s 1s infinite;}
+
+
+@keyframes loadingInit {
+    0 {height: 14px;margin-top: 23px;}
+    50% {height: 60px;margin-top: 0px;}
+    100% {height: 14px;margin-top: 23px;}
+}
+
+/* End of loading CSS */
