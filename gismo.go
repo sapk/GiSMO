@@ -1,13 +1,12 @@
 package main
 
-
 import (
-    "runtime"
-    
+	"runtime"
+
 	/*"github.com/codegangsta/cli"*/ //TODO
-    
-	"github.com/sapk/GiSMO/modules/web"
+
 	"github.com/sapk/GiSMO/modules/setting"
+	"github.com/sapk/GiSMO/modules/web"
 )
 
 const APP_VER = "0.0.1.0001 Alpha"
@@ -16,24 +15,26 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	setting.AppVer = APP_VER
 }
-func main(){   
-    web.Start(":4000")
+
+func main() {
+	web.Start(":4000")
 }
+
 /*
 func main() {
     e := echo.New()
 
     e.Static("/assets/","public/");
-    
+
     // New permissions middleware
     perm, err := permissionbolt.New()
     if err != nil {
         log.Fatalln(err)
     }
- 
+
     // Blank slate, no default permissions
     perm.Clear()
-    
+
     //TODO set perm
 
     // Set up a middleware handler for Echo, with a custom "permission denied" message.
@@ -60,7 +61,7 @@ func main() {
 
     // Get the userstate, used in the handlers below
     userstate := perm.UserState()
-    
+
     e.Get("/login", func(c *echo.Context) error {
         // Headers will be written, for storing a cookie
         userstate.Login(c.Response().Writer(), "bob")

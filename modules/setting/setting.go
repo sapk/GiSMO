@@ -7,6 +7,7 @@ import (
 var (
 	// App settings.
 	AppVer    string
+	ApiVer    string
     
 	IsWindows bool
 )
