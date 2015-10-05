@@ -8,6 +8,10 @@ import (
     "github.com/labstack/echo"  
     "github.com/dustin/go-humanize"
 	"github.com/sapk/GiSMO/modules/setting" 
+    "github.com/xyproto/pinterface"
+    
+	"github.com/sapk/GiSMO/routers/api/user" 
+	"github.com/sapk/GiSMO/routers/api/admin" 
 )
 const API_VER = "0.1"
 
@@ -19,6 +23,7 @@ func init() {
 var (
 	startTime = time.Now()
 )
+
 var sysStatus struct {
 	Uptime       string
 	NumGoroutine int
@@ -60,14 +65,13 @@ var sysStatus struct {
 	NumGC        uint32
 }
 //RegiterRouteHandler
-func RegiterRouteHandler(api *echo.Group) {
+func RegiterRouteHandler(api *echo.Group, userstate pinterface.IUserState) {
     
 		api.Get("/", home)
 		api.Get("/status", status)
-    /*
-		e.Post("user/login", auth.SignIn)
-		e.Get("user/logout", auth.LogOut)
-*/
+        
+        admin.RegiterRouteHandler(api.Group("/admin"), userstate);
+        user.RegiterRouteHandler(api.Group("/user"), userstate);    
 }
 
 
@@ -115,6 +119,6 @@ func home(ctx *echo.Context) error {
 }
 // Status 
 func status(ctx *echo.Context) error {
-    updateSystemStatus(); //TODO uodate periodicaly not on call or at least cache the result
+    updateSystemStatus(); //TODO update periodicaly not on call or at least cache the result
     return ctx.JSON(http.StatusOK, sysStatus);
 }
