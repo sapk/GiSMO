@@ -6,30 +6,35 @@ import (
     "github.com/labstack/echo" 
     "github.com/xyproto/pinterface" 
 )
-
+/*
+type User struct {
+    FirstName string
+    LastName string
+}
+*/
 //RegiterRouteHandler
 func RegiterRouteHandler(user *echo.Group, userstate pinterface.IUserState) {
-    user.Post("/login", func(c *echo.Context) error {
+    user.Post("/_login", func(c *echo.Context) error {
         username := c.Form("username") //TODO clean var
         if (userstate.CorrectPassword(username , c.Form("password"))){
             userstate.Login(c.Response().Writer(), username)
-            return c.String(http.StatusOK, fmt.Sprintf("%v is now logged in: %v\n", username, userstate.IsLoggedIn(username))) //TODO use JSON
+        return c.String(http.StatusOK, userState(true,userstate.IsAdmin(username),username))
         }else{
-            return c.String(http.StatusUnauthorized, fmt.Sprintf("%v is not logged in: %v\n", username, userstate.IsLoggedIn(username))) //TODO use JSON        
+        return c.String(http.StatusOK, userState(false,false,""))        
         }
     })
-    user.Get("/logout", func(c *echo.Context) error {
+    user.Get("/_logout", func(c *echo.Context) error {
         username := userstate.Username(c.Request()) //TODO check for error
         userstate.Logout(username)
         userstate.ClearCookie(c.Response().Writer())
-        return c.String(http.StatusOK, fmt.Sprintf("%v is now logged out: %v\n",username , !userstate.IsLoggedIn("bob")))     
+        return c.String(http.StatusOK, userState(false,false,""))  
     })
-    user.Get("/_current/status", func(c *echo.Context) error {
-        username := userstate.Username(c.Request()) //TODO check for error
-        if (userstate.UserRights(c.Request())){
-            return c.String(http.StatusOK, fmt.Sprintf("User (%v) is logged !\n",username)) //TODO use JSON
-        }else{
-            return c.String(http.StatusOK, fmt.Sprintf("User (%v) is not logged !\n",username)) //TODO use JSON
-        }
+    user.Get("/_current", func(c *echo.Context) error {
+        username := userstate.Username(c.Request())
+        return c.String(http.StatusOK, userState(userstate.UserRights(c.Request()),userstate.AdminRights(c.Request()),username))
     })
+}
+
+func userState(isLogged, isAdmin bool, username string) string {
+    return fmt.Sprintf("{\"isLogged\":%v,\"isAdmin\":%v,\"username\":\"%v\"}",isLogged,isAdmin,username)
 }
